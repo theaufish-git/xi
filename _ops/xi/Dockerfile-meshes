@@ -1,0 +1,7 @@
+FROM ubuntu:22.04
+
+RUN apt clean
+RUN mkdir /opt/xi
+COPY losmeshes /opt/xi/losmeshes
+COPY navmeshes /opt/xi/navmeshes
+WORKDIR /opt/xi

@@ -1,0 +1,6 @@
+FROM ubuntu:22.04
+
+RUN apt clean
+RUN mkdir /opt/xi
+COPY scripts /opt/xi/scripts
+WORKDIR /opt/xi

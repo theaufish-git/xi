@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "release.name" . }}
+  labels:
+    app: {{ include "release.name" . }}
+spec:
+  type: LoadBalancer
+  {{- include "loadbalancer.ip" .Values.xi }}
+  selector:
+    app: {{ include "release.name" . }}
+  ports:
+  {{- include "service.port" (list "auth" .Values.xi.connect.ports.auth) | nindent 2 }}
+  {{- include "service.port" (list "data" .Values.xi.connect.ports.data) | nindent 2 }}
+  {{- include "service.port" (list "view" .Values.xi.connect.ports.view) | nindent 2 }}
+  {{- include "service.port" (list "map" .Values.xi.map.ports.map) | nindent 2 }}
+  {{- include "service.port" (list "search" .Values.xi.search.ports.search) | nindent 2 }}
+{{- if .Values.sql.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "release.name.sql" . }}
+  labels:
+    app: {{ include "release.name.sql" . }}
+spec:
+  type: ClusterIP
+  {{- include "loadbalancer.ip" .Values.sql }}
+  selector:
+    app: {{ include "release.name.sql" . }}
+  ports:
+  {{- include "service.port" (list "sql" .Values.sql.ports.sql) | nindent 2 }}
+{{- end -}}

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "release.name" . }}
+data:
+  {{- if .Values.sql.enabled }}
+  XI_SQL_HOST: {{ include "release.name.sql" . | toString | quote }}
+  XI_SQL_PORT: {{ .Values.sql.ports.sql.targetPort | toString | quote }}
+  {{- else -}}
+  XI_SQL_HOST: {{ .Values.sql.host | toString | quote }}
+  XI_SQL_PORT: {{ .Values.sql.port | toString | quote }}
+  {{- end }}
+  {{ range $key, $value := .Values.envvars -}}
+  {{ $key }}: {{ toString $value | quote }}
+  {{ end -}}
+{{- if (and .Values.sql.enabled .Values.sql.envvars) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "release.name" . }}-sql
+data:
+  {{ range $key, $value := .Values.sql.envvars -}}
+  {{ $key }}: {{ toString $value | quote }}
+  {{ end -}}
+{{- end -}}

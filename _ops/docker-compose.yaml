@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  xi:
+    image: theaufish/xi:${TAG}
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile
+
+  xi-config:
+    image: theaufish/xi:${TAG}-config
+    build:
+      context: ..
+      dockerfile: _ops/config/Dockerfile
+
+  xi-meshes:
+    image: theaufish/xi:${TAG}-meshes
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile-meshes
+
+  xi-scripts:
+    image: theaufish/xi:${TAG}-scripts
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile-scripts
+
+  xi-sql:
+    image: theaufish/xi:${TAG}-sql
+    build:
+      context: ..
+      dockerfile: _ops/sql/Dockerfile

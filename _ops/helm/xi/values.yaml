@@ -1,0 +1,504 @@
+revision: v0.0.1
+
+xi:
+  loadBalancer:
+    ip: 0.0.0.0
+  connect:
+    env:
+      XI_APP: connect
+    ports:
+      auth:
+        protocol: TCP
+        port: 54231
+        targetPort: 54231
+      data:
+        protocol: TCP
+        port: 54230
+        targetPort: 54230
+      view:
+        protocol: TCP
+        port: 54001
+        targetPort: 54001
+  map:
+    env:
+      XI_APP: map
+    ports:
+      map:
+        protocol: UDP
+        port: 54230
+        targetPort: 54230
+  search:
+    env:
+      XI_APP: search
+    ports:
+      search:
+        protocol: TCP
+        port: 54002
+        targetPort: 54002
+  world:
+    env:
+      XI_APP: world
+
+init:
+  configure: {}
+  meshes: {}
+  scripts: {}
+
+sql:
+  enabled: true
+  ports:
+    sql:
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+  envvars:
+    XI_NETWORK_SQL_HOST: localhost
+
+envvars:
+  ## logging.lua
+  XI_PATTERN: "[%D %T:%e][%&]%^[%n]%$ %v (%!:%#)"
+
+  ## login.lua
+  XI_ACCOUNT_CREATION:      true
+  XI_BANNED_WORDS_LIST:
+  XI_CHARACTER_DELETION:    true
+  XI_DISABLE_MOB_NPC_NAMES: false
+  XI_LOGIN_LIMIT:           0
+  XI_LOG_USER_IP:           false
+  XI_MAINTENANCE_MODE:      0
+
+  ## main.lua
+  XI_EQUIP_FROM_OTHER_CONTAINERS: false
+  XI_HEALING_TP_CHANGE:           -100
+  XI_HOMEPOINT_TELEPORT:          1
+  XI_LANTERNS_STAY_LIT:           20m
+  XI_NUMBER_OF_DM_EARRINGS:       1
+  XI_RESTRICT_CONTENT:            0
+  XI_SHOP_PRICE:                  1.000
+
+  ## map.lua
+  XI_ABILITY_RECAST_MULTIPLIER:             1.0
+  XI_ALL_JOBS_WIDESCAN:                     true
+  XI_BATTLE_CAP_TWEAK:                      0
+  XI_BLOCK_TELL_TO_HIDDEN_GM:               false
+  XI_BLOOD_PACT_SHARED_TIMER:               false
+  XI_DISABLE_GEAR_SCALING:                  false
+  XI_ENABLE_ITEM_RECYCLE_BIN:               true
+  XI_FAME_MULTIPLIER:                       1.0
+  XI_HEALING_TICK_DELAY:                    10s
+  XI_KEEP_JUGPET_THROUGH_ZONING:            false
+  XI_LEVEL_CAP_MISSION_BCNM:                0
+  XI_LEVEL_SYNC_ENABLE:                     true
+  XI_MAX_TIME_LASTUPDATE:                   60s
+  XI_MINIMUM_LEVEL_CONQUEST_INFLUENCE_LOSS: 6
+  XI_REPORT_LUA_ERRORS_TO_PLAYER_LEVEL:     6
+  XI_SETVAR_RETRY_MAX:                      3
+  XI_VANADIEL_TIME_EPOCH:                   0
+  XI_YELL_COOLDOWN:                         30s
+
+  ## network.lua
+
+  ## search.lua
+  XI_EXPIRE_AUCTIONS: true
+  XI_EXPIRE_DAYS:     3
+  XI_EXPIRE_IMTERVAL: 1h
+  XI_OMIT_NO_HISTORY: false
+
+  ## expansions
+  ## expansions.cop
+  XI_COP_ENABLE:          1
+  XI_COP_ENABLE_ZONE_CAP: 0
+  XI_COP_RIVERNE_PORTERS: 2m
+
+  ## expansions.toau
+  XI_TOAU_ENABLE:          1
+  XI_TOAU_ASSAULT_MINIMUM: 1
+
+  ## expansions.wotg
+  XI_WOTG_ENABLE: 1
+
+  ## expansions.acp
+  XI_ACP_ENABLE: 1
+
+  ## expansions.amk
+  XI_AMK_ENABLE: 1
+
+  ## expansions.asa
+  XI_ASA_ENABLE: 1
+
+  ## expansions.abyssea
+  XI_ABYSSEA_ENABLE:             1
+  XI_ABYSSEA_BONUS_LIGHT_AMOUNT: 0
+  XI_ABYSSEA_CASKET_DROP_RATE:   0.1
+  XI_ABYSSEA_LIGHTS_DROP_RATE:   80
+
+  ## expansions.soa
+  XI_SOA_ENABLE:                   1
+  XI_SOA_USE_WEAPON_SKILL_CHANGES: true
+
+  ## expansions.rov
+  XI_ROV_ENABLE: 1
+
+  ## expansions.voidwatch
+  XI_VOIDWATCH_ENABLE: 1
+
+  ## components
+  ## components.alterego
+  XI_ALTEREGO_HP_MULTIPLIER:    1.0
+  XI_ALTEREGO_MP_MULTIPLIER:    1.0
+  XI_ALTEREGO_TP_MULTIPLIER:    1.0
+  XI_ALTEREGO_STAT_MULTIPLIER:  1.0
+  XI_ALTEREGO_SKILL_MULTIPLIER: 1.0
+
+  ## components.anticheat
+  XI_ANTICHEAT_ENABLED:             true
+  XI_ANTICHEAT_JAIL_DISABLE:        false
+  XI_ANTICHEAT_LIGHTLUGGAGE_BLOCK:  4
+  XI_ANTICHEAT_PACKETGUARD_ENABLED: true
+
+  ## components.artifactquests
+  XI_AF_QUEST_LEVEL_1: 40
+  XI_AF_QUEST_LEVEL_2: 50
+  XI_AF_QUEST_LEVEL_3: 50
+
+  ## components.auctionhouse
+  XI_AUCTIONHOUSE_BASE_FEE_SINGLE: 1
+  XI_AUCTIONHOUSE_BASE_FEE_STACKS: 4
+  XI_AUCTIONHOUSE_TAX_RATE_SINGLE: 1.0
+  XI_AUCTIONHOUSE_TAX_RATE_STACKS: 0.5
+  XI_AUCTIONHOUSE_MAX_FEE:         10000
+  XI_AUCTIONHOUSE_LIST_LIMIT:      7
+
+  ## components.audit
+  XI_AUDIT_GM_CMD:    false
+  XI_AUDIT_CHAT:      false
+  XI_AUDIT_SAY:       false
+  XI_AUDIT_SHOUT:     false
+  XI_AUDIT_TELL:      false
+  XI_AUDIT_YELL:      false
+  XI_AUDIT_LINKSHELL: false
+  XI_AUDIT_UNITY:     false
+  XI_AUDIT_PARTY:     false
+
+  ## components.celebration
+  XI_CELEBRATION_EXPLORER_MOOGLE_LEVEL: 10
+  XI_CELEBRATION_HALLOWEEN_2005:        0
+  XI_CELEBRATION_HALLOWEEN_YEAR_ROUND:  0
+
+  ## components.character
+  XI_CHARACTER_INITIAL_LEVEL_CAP:              50
+  XI_CHARACTER_MAX_LEVEL:                      99
+  XI_CHARACTER_NORMAL_MOB_MAX_LEVEL_RANGE_MIN: 0
+  XI_CHARACTER_NORMAL_MOB_MAX_LEVEL_RANGE_MAX: 0
+  XI_CHARACTER_START_GIL:                      10
+  XI_CHARACTER_START_INVENTORY:                30
+  XI_CHARACTER_NEW_CHARACTER_CUTSCENE:         1
+  XI_CHARACTER_SUBJOB_QUEST_LEVEL:             18
+  XI_CHARACTER_ADVANCED_JOB_LEVEL:             30
+  XI_CHARACTER_ALL_MAPS:                       0
+  XI_CHARACTER_UNLOCK_OUTPOST_WARPS:           0
+
+  ## components.client
+  XI_CLIENT_VERSION:      30230415_1
+  XI_CLIENT_VERSION_LOCK: 2
+
+  ## components.connect
+  XI_LOGIN_AUTH_IP:   0.0.0.0
+  XI_LOGIN_AUTH_PORT: 54231
+  XI_LOGIN_CONF_IP:   0.0.0.0
+  XI_LOGIN_CONF_PORT: 51220
+  XI_LOGIN_DATA_IP:   0.0.0.0
+  XI_LOGIN_DATA_PORT: 54230
+  XI_LOGIN_VIEW_IP:   0.0.0.0
+  XI_LOGIN_VIEW_PORT: 54001
+
+  ## components.craft
+  XI_CRAFT_MODERN_SYSTEM:         true
+  XI_CRAFT_COMMON_CAP:            700
+  XI_CRAFT_SPECIALIZATION_POINTS: 400
+  XI_CRAFT_CHANCE_MULTIPLIER:     1.0
+  XI_CRAFT_AMOUNT_MULTIPLIER:     1
+
+  ## components.currency
+  XI_CURRENCY_CAP_ACCOLADES: 99999
+  XI_CURRENCY_CAP_BALLISTA:  2000
+  XI_CURRENCY_CAP_SPARKS:    99999
+  XI_CURRENCY_CAP_VALOR:     50000
+  XI_CURRENCY_GIL_RATE:      1.000
+  XI_CURRENCY_BAYLD_RATE:    1.000
+  XI_CURRENCY_SPARKS_RATE:   1.000
+
+  ## components.debug
+  XI_DEBUG_ACTIONS:        false
+  XI_DEBUG_DELIVERY_BOX:   false
+  XI_DEBUG_ID_LOOKUP:      false
+  XI_DEBUG_MODULES:        false
+  XI_DEBUG_NAVMESH:        false
+  XI_DEBUG_PACKETS:        false
+  XI_DEBUG_PACKET_BACKLOG: false
+  XI_DEBUG_SOCKETS:        false
+  XI_DEBUG_SQL:            false
+
+  ## components.drops
+  XI_DROPS_RATE_MULTIPLIER: 1.0
+  XI_DROPS_GIL_MULTIPLIER:  1.0
+  XI_DROPS_GIL_BONUS:       0
+  XI_DROPS_MAX_GIL_BONUS:   9999
+
+  ## components.dynamis
+  XI_DYNAMIS_REENTRY_WAIT_TIME:           24h
+  XI_DYNAMIS_MIDNIGHT_RESET:              true
+  XI_DYNAMIS_LEVEL_MIN:                   65
+  XI_DYNAMIS_TIMELESS_HOURGLASS_COST:     500000
+  XI_DYNAMIS_PRISMATIC_HOURGLASS_COST:    50000
+  XI_DYNAMIS_CURRENCY_EXCHANGE_RATE:      100
+  XI_DYNAMIS_RELIC_2ND_UPGRADE_WAIT_TIME: 2h
+  XI_DYNAMIS_RELIC_3RD_UPGRADE_WAIT_TIME: 1h
+  XI_DYNAMIS_FREE_COP:                    0
+
+  ## components.emptyNotoriousMonster
+  XI_ENM_COOLDOWN:                  120h
+  XI_ENM_FORCE_SPAWN_QM_RESET_TIME: 5m
+
+  ## components.exp
+  XI_EXP_RATE:                      1.000
+  XI_EXP_CAPACITY_RATE:             1.000
+  XI_EXP_BOOK_RATE:                 1.000
+  XI_EXP_ROE_RATE:                  1.000
+  XI_EXP_SCRIPT_RATE:               1.000
+  XI_EXP_LOSS_RATE:                 1.000
+  XI_EXP_PARTY_CAP_PENALTIES:       true
+  XI_EXP_DISABLE_PARTY_PENALTY:     false
+  XI_EXP_RETAIN:                    0
+  XI_EXP_LOSS_LEVEL:                31
+  XI_EXP_MAX_MERIT_POINTS:          30
+  XI_EXP_RINGS_ALLOW_MULTIPLE:      0
+  XI_EXP_RINGS_BYPASS_ONE_PER_WEEK: 0
+
+  ## components.fellow
+  XI_FELLOW_HP_MULTIPLIER:   1.0
+  XI_FELLOW_MP_MULTIPLIER:   1.0
+  XI_FELLOW_TP_MULTIPLIER:   1.0
+  XI_FELLOW_STAT_MULTIPLIER: 1.0
+
+  ## components.fishing
+  XI_FISHING_ENABLE:           false
+  XI_FISHING_SKILL_MULTIPLIER: 1.0
+
+  ## components.garden
+  XI_GARDEN_DAY_MATTERS:       false
+  XI_GARDEN_MOONPHASE_MATTERS: false
+  XI_GARDEN_POT_MATTERS:       false
+  XI_GARDEN_MA_AURA_MATTERS:   false
+
+  ## components.garrison
+  XI_GARRISON_LOCKOUT:       30m
+  XI_GARRISON_TIME_LIMIT:    30m
+  XI_GARRISON_ONCE_PER_WEEK: 0
+  XI_GARRISON_PARTY_LIMIT:   18
+  XI_GARRISON_NATION_BYPASS: 0
+  XI_GARRISON_RANK:          2
+
+  ## components.gathering
+  XI_GATHERING_EXCAVATION_BREAK_CHANCE: 33
+  XI_GATHERING_EXCAVATION_RATE:         50
+  XI_GATHERING_HARVESTING_BREAK_CHANCE: 33
+  XI_GATHERING_HARVESTING_RATE:         50
+  XI_GATHERING_LOGGING_BREAK_CHANCE:    33
+  XI_GATHERING_LOGGING_RATE:            50
+  XI_GATHERING_MINING_BREAK_CHANCE:     33
+  XI_GATHERING_MINING_RATE:             50
+
+  ## components.gathering.digging
+  XI_GATHERING_DIGGING_RATE:            85
+  XI_GATHERING_DIGGING_ABUNDANCE_BONUS: 0
+  XI_GATHERING_DIGGING_FATIGUE:         1
+  XI_GATHERING_DIGGING_GRANT_BURROW:    0
+  XI_GATHERING_DIGGING_GRANT_BORE:      0
+
+  ## components.gobbiebox
+  XI_GOBBIEBOX_ENABLE:  1
+  XI_GOBBIEBOX_AMOUNT:  10
+  XI_GOBBIEBOX_LIMIT:   50000
+  XI_GOBBIEBOX_MIN_AGE: 45
+
+  ## components.http
+  XI_HTTP_ENABLE: false
+  XI_HTTP_HOST:   localhost
+  XI_HTTP_PORT:   8088
+
+  ## components.limbus
+  XI_LIMBUS_COSMO_CLEAN_BASE_COST: 15000
+
+  ## components.limitBreakQuests
+  XI_GENKAI_OLDSCHOOL_1:   false
+  XI_GENKAI_OLDSCHOOL_2:   false
+  XI_GENKAI_FRIGICITE_TIME: 30s
+
+  ## components.log
+  XI_LOG_DEBUG:   true
+  XI_LOG_INFO:    true
+  XI_LOG_LUA:     true
+  XI_LOG_WARNING: true
+
+  ## components.loginCampaign
+  XI_LOGINCAMPAIGN_ENABLE: 0
+
+  ## components.magianTrials
+  XI_MAGIANTRIALS_ENABLE:              1
+  XI_MAGIANTRIALS_MOB_KILL_MULTIPLIER: 1
+  XI_MAGIANTRIALS_TRADE_MULTIPLIER:    1
+
+  ## components.mob
+  XI_MOB_HP_MULTIPLIER:              1.0
+  XI_MOB_MP_MULTIPLIER:              1.0
+  XI_MOB_TP_MULTIPLIER:              1.0
+  XI_MOB_STAT_MULTIPLIER:            1.0
+  XI_MOB_INCLUDE_SUBJOB:             false
+  XI_MOB_NO_DESPAWN:                 false
+  XI_MOB_ADDITIONAL_TIME_TO_DEAGGRO: 0s
+
+  ## component.networkMap
+  XI_MAP_PORT: 54230
+
+  ## component.networkSearch
+  XI_SEARCH_PORT: 54002
+
+  ## components.notoriousMonster
+  XI_NM_HP_MULTIPLIER:              1.0
+  XI_NM_MP_MULTIPLIER:              1.0
+  XI_NM_TP_MULTIPLIER:              1.0
+  XI_NM_STAT_MULTIPLIER:            1.0
+  XI_NM_INCLUDE_SUBJOB:             false
+  XI_NM_NO_DESPAWN:                 false
+  XI_NM_ADDITIONAL_TIME_TO_DEAGGRO: 0s
+
+  ## components.nyzul
+  XI_NYZUL_RUNIC_DISK_SAVE:    true
+  XI_NYZUL_ENABLE_CASKETS:     true
+  XI_NYZUL_ENABLE_VIGIL_DROPS: true
+  XI_NYZUL_ACTIVATE_LAMP_TIME: 6s
+
+  ## components.pet
+  XI_PET_HP_MULTIPLIER:   1.0
+  XI_PET_MP_MULTIPLIER:   1.0
+  XI_PET_TP_MULTIPLIER:   1.0
+  XI_PET_STAT_MULTIPLIER: 1.0
+
+  ## components.player
+  XI_PLAYER_HP_MULTIPLIER:   1.0
+  XI_PLAYER_MP_MULTIPLIER:   1.0
+  XI_PLAYER_TP_MULTIPLIER:   1.0
+  XI_PLAYER_STAT_MULTIPLIER: 1.0
+
+  ## components.recordsOfEminence
+  XI_ROE_ENABLE:                1
+  XI_ROE_ENABLE_TIMED:          1
+  XI_ROE_ENABLE_EXCHANGE_LIMIT: 1
+  XI_ROE_WEEKLY_EXCHANGE_LIMIT: "1000000"
+
+  ## components.server
+  XI_SERVER_NAME:    nameless
+  XI_SERVER_MESSAGE: Welcome to nameless
+
+  ## components.skillup
+  XI_SKILLUP_BLOOD_PACT:        true
+  XI_SKILLUP_OLD_PARRY_STYLE:   false
+  XI_SKILLUP_OLD_BLOCK_STYLE:   false
+  XI_SKILLUP_OLD_GUARD_STYLE:   false
+  XI_SKILLUP_CHANCE_MULTIPLIER: 1.0
+  XI_SKILLUP_AMOUNT_MULTIPLIER: 1.0
+
+  ## components.speed
+  XI_SPEED_PLAYER_MOD: 0
+  XI_SPEED_MOUNT_MOD:  0
+  XI_SPEED_MOB_MOD:    0
+
+  ## components.spell
+  XI_SPELL_CURE_POWER:      1.000
+  XI_SPELL_ELEMENTAL_POWER: 1.000
+  XI_SPELL_DIVINE_POWER:    1.000
+  XI_SPELL_NINJITSU_POWER:  1.000
+  XI_SPELL_BLUE_POWER:      1.000
+  XI_SPELL_DARK_POWER:      1.000
+  XI_SPELL_ITEM_POWER:      1.000
+
+  XI_SPELL_DIA_OVERWRITE:                   1
+  XI_SPELL_BIO_OVERWRITE:                   0
+  XI_SPELL_STONESKIN_CAP:                   350
+  XI_SPELL_BLINK_SHADOWS:                   2
+  XI_SPELL_SPIKE_EFFECT_DURATION:           3m
+  XI_SPELL_ELEMENTAL_DEBUFF_DURATION:       2m
+  XI_SPELL_AQUAVEIL_COUNTER:                1
+  XI_SPELL_ABSORB_SPELL_AMOUNT:             8
+  XI_SPELL_ABSORB_SPELL_TICK:               9s
+  XI_SPELL_SNEAK_INVIS_DURATION_MULTIPLIER: 1.000
+  XI_SPELL_USE_OLD_CURE_FORMULA:            false
+  XI_SPELL_USE_OLD_MAGIC_DAMAGE:            false
+
+  ## components.sql
+  ## XI_SQL_HOST:     -- provided by default configmap
+  ## XI_SQL_PORT:     -- provided by default configmap
+  ## XI_SQL_LOGIN:    -- provided via secret
+  ## XI_SQL_PASSWORD: -- provided via secret
+  ## XI_SQL_DATABASE: -- provided via secret
+
+  ## components.subjob
+  XI_SUBJOB_MP_DIVISOR: 2.0
+  XI_SUBJOB_RATIO:      1
+
+  ## components.trust
+  XI_TRUST_HP_MULTIPLIER:                          1.0
+  XI_TRUST_MP_MULTIPLIER:                          1.0
+  XI_TRUST_TP_MULTIPLIER:                          1.0
+  XI_TRUST_STAT_MULTIPLIER:                        1.0
+  XI_TRUST_ENABLE_CASTING:                         1
+  XI_TRUST_ENABLE_QUESTS:                          1
+  XI_TRUST_ENABLE_CUSTOM_ENGAGEMENT:               0
+  XI_TRUST_ENABLE_ALTER_EGO_EXTRAVAGANZA:          0
+  XI_TRUST_ENABLE_ALTER_EGO_EXTRAVAGANZA_ANNOUNCE: 0
+  XI_TRUST_ENABLE_ALTER_EGO_EXPO:                  0
+  XI_TRUST_ENABLE_ALTER_EGO_EXPO_ANNOUNCE:         0
+  XI_TRUST_ALTER_EGO_EXTRAVAGANZA_MESSAGE:         The Alter Ego Extravaganza Campaign is active!
+  XI_TRUST_ALTER_EGO_EXPO_MESSAGE:                 The Alter Ego Expo Campaign is active!
+
+  ## components.tcp
+  XI_TCP_DEBUG:            false
+  XI_TCP_STALL_TIME:       1m
+  XI_TCP_ENABLE_IP_RULES:  false
+  XI_TCP_ORDER:            deny,allow
+  XI_TCP_ALLOW:            ""
+  XI_TCP_DENY:             ""
+  XI_TCP_CONNECT_INTERVAL: 3s
+  XI_TCP_CONNECT_COUNT:    10
+  XI_TCP_CONENCT_LOCKOUT:  10m
+
+  ## components.treasure
+  XI_TREASURE_COFFER_ILLUSION_TIME_MAX: 1h
+  XI_TREASURE_COFFER_ILLUSION_TIME_MIN: 30m
+  XI_TREASURE_CHEST_ILLUSION_TIME_MAX:  1h
+  XI_TREASURE_CHEST_ILLUSION_TIME_MIN:  30m
+
+  ## components.udp
+  XI_UDP_DEBUG: false
+
+  ## components.valor
+  XI_VALOR_ENABLE_FIELD_MANUALS:    1
+  XI_VALOR_ENABLE_GROUNDS_TOMES:    1
+  XI_VALOR_ENABLE_SURVIVAL_GUIDE:   1
+  XI_VALOR_REGIME_WAIT:             1
+  XI_VALOR_FIELDS_REWARD_ALLIANCE:  0
+  XI_VALOR_GROUNDS_REWARD_ALLIANCE: 1
+  XI_VALOR_TABS_RATE:               1.000
+
+  ## components.voidwalker
+  XI_VOIDWALKER_ENABLE: 1
+
+  ## components.weaponskill
+  XI_WEAPONSKILL_POWER:             1.000
+  XI_WEAPONSKILL_POINTS_BASE:       1
+  XI_WEAPONSKILL_POINTS_SKILLCHAIN: 1
+
+  ## components.zmq
+  XI_ZMQ_IP:   127.0.0.1
+  XI_ZMQ_PORT: 54003
