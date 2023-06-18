@@ -3,9 +3,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "release.name" . }}
 data:
+  XI_SERVER_NAME: {{ .Values.xi.server.name | toString | quote }}
+  XI_SERVER_MESSAGE: {{ .Values.xi.server.message | toString | quote }}
   {{- if .Values.sql.enabled }}
   XI_SQL_HOST: {{ include "release.name.sql" . | toString | quote }}
-  XI_SQL_PORT: {{ .Values.sql.ports.sql.targetPort | toString | quote }}
+  XI_SQL_PORT: {{ include "sql.port" .Values.sql.ports | toString | quote }}
   {{- else -}}
   XI_SQL_HOST: {{ .Values.sql.host | toString | quote }}
   XI_SQL_PORT: {{ .Values.sql.port | toString | quote }}
@@ -22,5 +24,9 @@ metadata:
 data:
   {{ range $key, $value := .Values.sql.envvars -}}
   {{ $key }}: {{ toString $value | quote }}
+  {{ end -}}
+  {{ range $i, $port := (rest .Values.xi.services.map.ports) -}}
+  {{ printf "xi_map_instance_%v_port" (add1 $i) | upper }}: {{ coalesce $port.port $port.targetPort | toString | quote }}
+  {{ printf "xi_map_instance_%v_clause" (add1 $i) | upper }}: {{ $port.clause | toString | quote }}
   {{ end -}}
 {{- end -}}

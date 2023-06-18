@@ -2,31 +2,31 @@ version: '3'
 
 services:
   xi:
-    image: theaufish/xi:${TAG}
+    image: ${REPOSITORY}:${REVISION}
     build:
       context: ..
       dockerfile: _ops/xi/Dockerfile
 
   xi-config:
-    image: theaufish/xi:${TAG}-config
+    image: ${REPOSITORY}:${REVISION}-config
     build:
       context: ..
       dockerfile: _ops/config/Dockerfile
 
   xi-meshes:
-    image: theaufish/xi:${TAG}-meshes
+    image: ${REPOSITORY}:${REVISION}-meshes
     build:
       context: ..
       dockerfile: _ops/xi/Dockerfile-meshes
 
   xi-scripts:
-    image: theaufish/xi:${TAG}-scripts
+    image: ${REPOSITORY}:${REVISION}-scripts
     build:
       context: ..
       dockerfile: _ops/xi/Dockerfile-scripts
 
   xi-sql:
-    image: theaufish/xi:${TAG}-sql
+    image: ${REPOSITORY}:${REVISION}-sql
     build:
       context: ..
       dockerfile: _ops/sql/Dockerfile

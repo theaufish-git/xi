@@ -27,8 +27,22 @@
 {{- end }}
 {{- end -}}
 
-## container.ports $container $state
+## container.ports $port
 {{- define "container.port" -}}
-- containerPort: {{ .targetPort }}
+- containerPort: {{ coalesce .targetPort .port }}
 {{- end -}}
 
+## container.ports $ports
+{{- define "container.ports" -}}
+{{- range $_, $port := . }}
+- containerPort: {{ coalesce $port.targetPort $port.port }}
+{{- end }}
+{{- end -}}
+
+## container.security $container
+{{- define "container.security" -}}
+{{- if .securityContext -}}
+securityContext:
+  {{- toYaml .securityContext | nindent 2 -}}
+{{- end -}}
+{{- end -}}

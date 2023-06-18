@@ -1,12 +1,3 @@
-## loadbalancer.ip deployment
-{{- define "loadbalancer.ip" -}}
-{{- if .Loadbalancer }}
-{{- if .loadbalancer.ip }}
-loadBalancerIP: {{ .loadbalancer.ip }}
-{{- end }}
-{{- end }}
-{{- end -}}
-
 ## release.name state
 {{- define "release.name" -}}
 xi-{{ .Release.Name }}
@@ -15,4 +6,9 @@ xi-{{ .Release.Name }}
 ## release.name.sql state
 {{- define "release.name.sql" -}}
 {{ include "release.name" . }}-sql
+{{- end -}}
+
+## sql.port
+{{- define "sql.port" -}}
+{{ with (index . 0) -}}{{- coalesce .targetPort .port -}}{{- end }}
 {{- end -}}

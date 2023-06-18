@@ -37,10 +37,10 @@ RUN make
 
 FROM image
 
-COPY --from=build /opt/xi/xi_connect /usr/local/bin/xi_connect
-COPY --from=build /opt/xi/xi_map /usr/local/bin/xi_map
-COPY --from=build /opt/xi/xi_search /usr/local/bin/xi_search
-COPY --from=build /opt/xi/xi_world /usr/local/bin/xi_world
+COPY --from=build /opt/xi/xi_connect /opt/xi/bin/xi_connect
+COPY --from=build /opt/xi/xi_map /opt/xi/bin/xi_map
+COPY --from=build /opt/xi/xi_search /opt/xi/bin/xi_search
+COPY --from=build /opt/xi/xi_world /opt/xi/bin/xi_world
+COPY --from=build /opt/xi/res /opt/xi/res
 
-RUN mkdir /opt/xi
 WORKDIR /opt/xi

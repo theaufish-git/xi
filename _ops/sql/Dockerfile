@@ -9,10 +9,11 @@ COPY tools/requirements.txt /opt/xi/tools/requirements.txt
 RUN pip3 install -r /opt/xi/tools/requirements.txt
 
 COPY .git /opt/xi/.git
-COPY sql /opt/xi/sql
+COPY _ops/sql/tools/map-partitions.py /opt/xi/tools/map-partitions.py
+COPY _ops/sql/schema /docker-entrypoint-initdb.d
 COPY modules/init.txt /opt/xi/modules/init.txt
+COPY sql /opt/xi/sql
 COPY tools/dbtool.py /opt/xi/tools/dbtool.py
 COPY tools/migrations /opt/xi/tools/migrations
-COPY _ops/sql/schema /docker-entrypoint-initdb.d
 
 WORKDIR /opt/xi

@@ -1,56 +1,49 @@
 revision: v0.0.1
 
 xi:
+  server:
+    name: undefined
+    message: Welcome to undefined
+
   loadBalancer:
     ip: 0.0.0.0
-  connect:
-    env:
-      XI_APP: connect
-    ports:
-      auth:
-        protocol: TCP
-        port: 54231
-        targetPort: 54231
-      data:
-        protocol: TCP
-        port: 54230
-        targetPort: 54230
-      view:
-        protocol: TCP
-        port: 54001
-        targetPort: 54001
-  map:
-    env:
-      XI_APP: map
-    ports:
-      map:
-        protocol: UDP
-        port: 54230
-        targetPort: 54230
-  search:
-    env:
-      XI_APP: search
-    ports:
-      search:
-        protocol: TCP
-        port: 54002
-        targetPort: 54002
-  world:
-    env:
-      XI_APP: world
 
-init:
-  configure: {}
-  meshes: {}
-  scripts: {}
+  ## services
+  services:
+    connect:
+      env:
+        XI_APP: connect
+      ports:
+      - protocol: TCP
+        port: 54231
+      - protocol: TCP
+        port: 54230
+      - protocol: TCP
+        port: 54001
+    map:
+      ports:
+      - protocol: UDP
+        port: 54230
+      env:
+        XI_APP: map
+    search:
+      env:
+        XI_APP: search
+      ports:
+      - protocol: TCP
+        port: 54002
+    world:
+      env:
+        XI_APP: world
+    configure: {}
+    meshes: {}
+    scripts: {}
 
 sql:
   enabled: true
   ports:
-    sql:
-      protocol: TCP
-      port: 3306
-      targetPort: 3306
+  - protocol: TCP
+    port: 3306
   envvars:
     XI_NETWORK_SQL_HOST: localhost
 
@@ -398,8 +391,8 @@ envvars:
   XI_ROE_WEEKLY_EXCHANGE_LIMIT: "1000000"
 
   ## components.server
-  XI_SERVER_NAME:    nameless
-  XI_SERVER_MESSAGE: Welcome to nameless
+  ## XI_SERVER_NAME:    nameless            -- provided by .Values.xi.server.name
+  ## XI_SERVER_MESSAGE: Welcome to nameless -- provided by .Values.xi.server.message
 
   ## components.skillup
   XI_SKILLUP_BLOOD_PACT:        true

@@ -16,54 +16,59 @@ spec:
     spec:
       containers:
       - name: connect
-        image: {{ coalesce  .Values.xi.connect.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.xi.connect.revision .Values.xi.revision .Values.revision }}
+        image: {{ coalesce  .Values.xi.services.connect.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.connect.revision .Values.xi.services.revision .Values.revision }}
         imagePullPolicy: IfNotPresent
         command:
-        - xi_connect
+        - /opt/xi/bin/xi_connect
         env:
         {{- include "container.env.default" . | nindent 8 }}
         ports:
-        {{- include "container.port" .Values.xi.connect.ports.auth | nindent 8 }}
-        {{- include "container.port" .Values.xi.connect.ports.data | nindent 8 }}
-        {{- include "container.port" .Values.xi.connect.ports.view | nindent 8 }}
+        {{- include "container.ports" .Values.xi.services.connect.ports | nindent 8 }}
         volumeMounts:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
-      - name: map
-        image: {{ coalesce  .Values.xi.map.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.xi.map.revision .Values.xi.revision .Values.revision }}
+      {{- range $i, $port := .Values.xi.services.map.ports }}
+      - name: map-{{ $i }}
+        image: {{ coalesce  $.Values.xi.services.map.repository $.Values.xi.services.repository $.Values.repository }}:{{ coalesce  $.Values.xi.services.map.revision $.Values.xi.services.revision $.Values.revision }}
         imagePullPolicy: IfNotPresent
         command:
-        - xi_map
+        - /opt/xi/bin/xi_map
+        args:
+        - --log
+        - map-server-{{ $i }}.log
+        - --port
+        - {{ coalesce $port.targetPort $port.port | toString | quote }}
         env:
-        {{- include "container.env.default" . | nindent 8 }}
+        {{- include "container.env.default" $ | nindent 8 }}
         ports:
-        {{- include "container.port" .Values.xi.map.ports.map | nindent 8 }}
+        {{- include "container.port" $port | nindent 8 }}
         volumeMounts:
-        - name: {{ include "release.name" . }}-losmeshes
+        - name: {{ include "release.name" $ }}-losmeshes
           mountPath: /opt/xi/losmeshes
-        - name: {{ include "release.name" . }}-navmeshes
+        - name: {{ include "release.name" $ }}-navmeshes
           mountPath: /opt/xi/navmeshes
-        - name: {{ include "release.name" . }}-scripts
+        - name: {{ include "release.name" $ }}-scripts
           mountPath: /opt/xi/scripts
-        - name: {{ include "release.name" . }}-settings
+        - name: {{ include "release.name" $ }}-settings
           mountPath: /opt/xi/settings
+      {{- end }}
       - name: search
-        image: {{ coalesce .Values.xi.search.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.xi.search.revision .Values.xi.revision .Values.revision }}
+        image: {{ coalesce .Values.xi.services.search.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.search.revision .Values.xi.services.revision .Values.revision }}
         imagePullPolicy: IfNotPresent
         command:
-        - xi_search
+        - /opt/xi/bin/xi_search
         env:
         {{- include "container.env.default" . | nindent 8 }}
         ports:
-        {{- include "container.port" .Values.xi.search.ports.search | nindent 8 }}
+        {{- include "container.ports" .Values.xi.services.search.ports | nindent 8 }}
         volumeMounts:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
       - name: world
-        image: {{ coalesce  .Values.xi.world.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.xi.world.revision .Values.xi.revision .Values.revision }}
+        image: {{ coalesce  .Values.xi.services.world.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.world.revision .Values.xi.services.revision .Values.revision }}
         imagePullPolicy: IfNotPresent
         command:
-        - xi_world
+        - /opt/xi/bin/xi_world
         env:
         {{- include "container.env.default" . | nindent 8 }}
         volumeMounts:
@@ -73,7 +78,7 @@ spec:
           mountPath: /opt/xi/settings
       initContainers:
       - name: configure
-        image: {{ coalesce  .Values.init.configure.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.init.configure.revision .Values.xi.revision .Values.revision }}-config
+        image: {{ coalesce  .Values.xi.services.configure.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.configure.revision .Values.xi.services.revision .Values.revision }}-config
         imagePullPolicy: IfNotPresent
         command:
         - sh
@@ -85,7 +90,7 @@ spec:
           xi-config -o /opt/xi/settings/default -p xi
         env:
         {{- include "container.env.default" . | nindent 8 }}
-        {{- include "container.env.secrets" .Values.init.configure.secrets | nindent 8 }}
+        {{- include "container.env.secrets" .Values.xi.services.configure.secrets | nindent 8 }}
         envFrom:
         - configMapRef:
             name: {{ include "release.name" . }}
@@ -93,15 +98,15 @@ spec:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
       - name: meshes
-        image: {{ coalesce  .Values.init.meshes.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.init.meshes.revision .Values.xi.revision .Values.revision }}-meshes
+        image: {{ coalesce  .Values.xi.services.meshes.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.meshes.revision .Values.xi.services.revision .Values.revision }}-meshes
         imagePullPolicy: IfNotPresent
         command:
         - bash
         args:
         - -c
         - |
-          cp /opt/xi/losmeshes/* /opt/xi/server/losmeshes && \
-          cp /opt/xi/navmeshes/* /opt/xi/server/navmeshes
+          cp -r /opt/xi/losmeshes/* /opt/xi/server/losmeshes && \
+          cp -r /opt/xi/navmeshes/* /opt/xi/server/navmeshes
         env:
         {{- include "container.env.default" . | nindent 8 }}
         volumeMounts:
@@ -110,7 +115,7 @@ spec:
         - name: {{ include "release.name" . }}-navmeshes
           mountPath: /opt/xi/server/navmeshes
       - name: scripts
-        image: {{ coalesce  .Values.init.scripts.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.init.scripts.revision .Values.xi.revision .Values.revision }}-scripts
+        image: {{ coalesce  .Values.xi.services.scripts.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.scripts.revision .Values.xi.services.revision .Values.revision }}-scripts
         imagePullPolicy: IfNotPresent
         command:
         - bash
@@ -123,8 +128,6 @@ spec:
         - name: {{ include "release.name" . }}-scripts
           mountPath: /opt/xi/server/scripts
       volumes:
-      - name: {{ include "release.name" . }}-nil
-        emptyDir: {}
       - name: {{ include "release.name" . }}-losmeshes
         emptyDir: {}
       - name: {{ include "release.name" . }}-navmeshes
@@ -133,28 +136,29 @@ spec:
         emptyDir: {}
       - name: {{ include "release.name" . }}-settings
         emptyDir: {}
-{{- if .Values.sql.enabled }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "release.name.sql" $ }}
+  name: {{ include "release.name.sql" . }}
   labels:
-    app: {{ include "release.name.sql" $ }}
+    app: {{ include "release.name.sql" . }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ include "release.name.sql" $ }}
+      app: {{ include "release.name.sql" . }}
   template:
     metadata:
       labels:
-        app: {{ include "release.name.sql" $ }}
+        app: {{ include "release.name.sql" . }}
+    {{- if .Values.sql.enabled }}
     spec:
       containers:
       - name: sql
         image: {{ default .Values.repository .Values.sql.repository }}:{{ default .Values.revision .Values.sql.revision }}-sql
         imagePullPolicy: IfNotPresent
+        {{- include "container.security" .sql | nindent 8 }}
         env:
         {{- include "container.env.default" .Values.sql | nindent 8 }}
         {{- include "container.env.secrets" .Values.sql.secrets | nindent 8 }}
@@ -162,13 +166,17 @@ spec:
         - configMapRef:
             name: {{ include "release.name" . }}-sql
         ports:
-        {{- include "container.port" .Values.sql.ports.sql | nindent 8 }}
+        {{- include "container.ports" .Values.sql.ports | nindent 8 }}
         volumeMounts:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
+        - name: {{ include "release.name" . }}-sql-backups
+          mountPath: /opt/xi/sql/backups
+        - name: {{ include "release.name" . }}-sql-storage
+          mountPath: /var/lib/mysql
       initContainers:
       - name: configure
-        image: {{ coalesce  .Values.init.configure.repository .Values.xi.repository .Values.repository }}:{{ coalesce  .Values.init.configure.revision .Values.xi.revision .Values.revision }}-config
+        image: {{ coalesce  .Values.xi.services.configure.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.configure.revision .Values.xi.services.revision .Values.revision }}-config
         imagePullPolicy: IfNotPresent
         command:
         - sh
@@ -180,7 +188,7 @@ spec:
           xi-config -o /opt/xi/settings/default -p xi
         env:
         {{- include "container.env.default" . | nindent 8 }}
-        {{- include "container.env.secrets" .Values.init.configure.secrets | nindent 8 }}
+        {{- include "container.env.secrets" .Values.xi.services.configure.secrets | nindent 8 }}
         envFrom:
         - configMapRef:
             name: {{ include "release.name" . }}
@@ -189,19 +197,60 @@ spec:
         volumeMounts:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
-        - name: {{ include "release.name" . }}-sql-backups
-          mountPath: /opt/xi/sql/backups
-        - name: {{ include "release.name" . }}-sql-storage
-          mountPath: /var/lib/mysql
       volumes:
       - name: {{ include "release.name" . }}-settings
         emptyDir: {}
       - name: {{ include "release.name" . }}-sql-backups
         hostPath:
-          path: {{ .Values.sql.dirs.backups }}
+          path: /run/desktop/mnt/host/{{ .Values.sql.dirs.backups }}
           type: DirectoryOrCreate
       - name: {{ include "release.name" . }}-sql-storage
         hostPath:
-          path: {{ .Values.sql.dirs.storage }}
+          path: /run/desktop/mnt/host/{{ .Values.sql.dirs.storage }}
           type: DirectoryOrCreate
-{{- end }}
+    {{- else }}
+    spec:
+      containers:
+      - name: sql
+        image: {{ default .Values.repository .Values.sql.repository }}:{{ default .Values.revision .Values.sql.revision }}-sql
+        imagePullPolicy: IfNotPresent
+        command:
+        - bash
+        stdin: true
+        tty: true
+        env:
+        {{- include "container.env.default" .Values.sql | nindent 8 }}
+        {{- include "container.env.secrets" .Values.sql.secrets | nindent 8 }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "release.name" . }}-sql
+        volumeMounts:
+        - name: {{ include "release.name" . }}-settings
+          mountPath: /opt/xi/settings
+      initContainers:
+      - name: configure
+        image: {{ coalesce  .Values.xi.services.configure.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.configure.revision .Values.xi.services.revision .Values.revision }}-config
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        args:
+        - -c
+        - |
+          mkdir -p /opt/xi/settings/default && \
+          xi-config -o /opt/xi/settings -p xi && \
+          xi-config -o /opt/xi/settings/default -p xi
+        env:
+        {{- include "container.env.default" . | nindent 8 }}
+        {{- include "container.env.secrets" .Values.xi.services.configure.secrets | nindent 8 }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "release.name" . }}
+        - configMapRef:
+            name: {{ include "release.name" . }}-sql
+        volumeMounts:
+        - name: {{ include "release.name" . }}-settings
+          mountPath: /opt/xi/settings
+      volumes:
+      - name: {{ include "release.name" . }}-settings
+        emptyDir: {}
+    {{- end }}
