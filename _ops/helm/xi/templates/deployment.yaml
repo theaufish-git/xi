@@ -136,6 +136,7 @@ spec:
         emptyDir: {}
       - name: {{ include "release.name" . }}-settings
         emptyDir: {}
+      {{- include "deployment.imagePullSecrets" . | nindent 6 }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -152,13 +153,19 @@ spec:
     metadata:
       labels:
         app: {{ include "release.name.sql" . }}
-    {{- if .Values.sql.enabled }}
     spec:
       containers:
       - name: sql
         image: {{ default .Values.repository .Values.sql.repository }}:{{ default .Values.revision .Values.sql.revision }}-sql
         imagePullPolicy: IfNotPresent
-        {{- include "container.security" .sql | nindent 8 }}
+        {{ if .Values.sql.local -}}
+        {{ include "container.security" .sql | nindent 8 }}
+        {{- else -}}
+        command:
+        - bash
+        stdin: true
+        tty: true
+        {{- end }}
         env:
         {{- include "container.env.default" .Values.sql | nindent 8 }}
         {{- include "container.env.secrets" .Values.sql.secrets | nindent 8 }}
@@ -170,10 +177,12 @@ spec:
         volumeMounts:
         - name: {{ include "release.name" . }}-settings
           mountPath: /opt/xi/settings
+        {{- if .Values.sql.local }}
         - name: {{ include "release.name" . }}-sql-backups
           mountPath: /opt/xi/sql/backups
         - name: {{ include "release.name" . }}-sql-storage
           mountPath: /var/lib/mysql
+        {{- end }}
       initContainers:
       - name: configure
         image: {{ coalesce  .Values.xi.services.configure.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.configure.revision .Values.xi.services.revision .Values.revision }}-config
@@ -200,6 +209,7 @@ spec:
       volumes:
       - name: {{ include "release.name" . }}-settings
         emptyDir: {}
+      {{- if .Values.sql.local }}
       - name: {{ include "release.name" . }}-sql-backups
         hostPath:
           path: /run/desktop/mnt/host/{{ .Values.sql.dirs.backups }}
@@ -208,49 +218,5 @@ spec:
         hostPath:
           path: /run/desktop/mnt/host/{{ .Values.sql.dirs.storage }}
           type: DirectoryOrCreate
-    {{- else }}
-    spec:
-      containers:
-      - name: sql
-        image: {{ default .Values.repository .Values.sql.repository }}:{{ default .Values.revision .Values.sql.revision }}-sql
-        imagePullPolicy: IfNotPresent
-        command:
-        - bash
-        stdin: true
-        tty: true
-        env:
-        {{- include "container.env.default" .Values.sql | nindent 8 }}
-        {{- include "container.env.secrets" .Values.sql.secrets | nindent 8 }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "release.name" . }}-sql
-        volumeMounts:
-        - name: {{ include "release.name" . }}-settings
-          mountPath: /opt/xi/settings
-      initContainers:
-      - name: configure
-        image: {{ coalesce  .Values.xi.services.configure.repository .Values.xi.services.repository .Values.repository }}:{{ coalesce  .Values.xi.services.configure.revision .Values.xi.services.revision .Values.revision }}-config
-        imagePullPolicy: IfNotPresent
-        command:
-        - sh
-        args:
-        - -c
-        - |
-          mkdir -p /opt/xi/settings/default && \
-          xi-config -o /opt/xi/settings -p xi && \
-          xi-config -o /opt/xi/settings/default -p xi
-        env:
-        {{- include "container.env.default" . | nindent 8 }}
-        {{- include "container.env.secrets" .Values.xi.services.configure.secrets | nindent 8 }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "release.name" . }}
-        - configMapRef:
-            name: {{ include "release.name" . }}-sql
-        volumeMounts:
-        - name: {{ include "release.name" . }}-settings
-          mountPath: /opt/xi/settings
-      volumes:
-      - name: {{ include "release.name" . }}-settings
-        emptyDir: {}
-    {{- end }}
+      {{- end }}
+      {{- include "deployment.imagePullSecrets" . | nindent 6 }}

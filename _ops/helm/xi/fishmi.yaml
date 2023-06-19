@@ -1,0 +1,46 @@
+repository: aufish/xi
+revision: v0.0.1
+
+xi:
+  server:
+    name: fishmi
+    message: Welcome to fishmi
+
+  services:
+    map:
+      ports:
+      - port: 54230
+        protocol: UDP
+      - port: 54231
+        protocol: UDP
+        clause: zoneid % 3 = 1
+      - port: 54232
+        protocol: UDP
+        clause: zoneid % 3 = 2
+    configure:
+      secrets:
+      - from: fishmi-sql
+        prefix: xi_sql
+        values:
+          username: username
+          password: password
+          database: database
+
+sql:
+  local: true
+  dirs:
+    backups: /d/xi/sql/backups
+    storage: /d/xi/sql/storage
+  secrets:
+  - from: fishmi-sql
+    prefix: mariadb
+    values:
+      root_password: rootpassword
+  - from: fishmi-sql
+    prefix: xi_sql
+    values:
+      username: username
+      password: password
+      database: database
+
+config: {}

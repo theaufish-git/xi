@@ -5,7 +5,7 @@ metadata:
 data:
   XI_SERVER_NAME: {{ .Values.xi.server.name | toString | quote }}
   XI_SERVER_MESSAGE: {{ .Values.xi.server.message | toString | quote }}
-  {{- if .Values.sql.enabled }}
+  {{ if .Values.sql.local -}}
   XI_SQL_HOST: {{ include "release.name.sql" . | toString | quote }}
   XI_SQL_PORT: {{ include "sql.port" .Values.sql.ports | toString | quote }}
   {{- else -}}
@@ -14,14 +14,14 @@ data:
   {{- end }}
   {{ range $key, $value := .Values.envvars -}}
   {{ $key }}: {{ toString $value | quote }}
-  {{ end -}}
-{{- if (and .Values.sql.enabled .Values.sql.envvars) }}
+  {{ end }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "release.name" . }}-sql
 data:
+  XI_NETWORK_SQL_HOST: {{ default "localhost" .Values.sql.host | toString | quote }}
   {{ range $key, $value := .Values.sql.envvars -}}
   {{ $key }}: {{ toString $value | quote }}
   {{ end -}}
@@ -29,4 +29,3 @@ data:
   {{ printf "xi_map_instance_%v_port" (add1 $i) | upper }}: {{ coalesce $port.port $port.targetPort | toString | quote }}
   {{ printf "xi_map_instance_%v_clause" (add1 $i) | upper }}: {{ $port.clause | toString | quote }}
   {{ end -}}
-{{- end -}}

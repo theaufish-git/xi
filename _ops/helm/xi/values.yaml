@@ -40,12 +40,9 @@ xi:
     scripts: {}
 
 sql:
-  enabled: true
   ports:
   - protocol: TCP
     port: 3306
-  envvars:
-    XI_NETWORK_SQL_HOST: localhost
 
 envvars:
   ## logging.lua
