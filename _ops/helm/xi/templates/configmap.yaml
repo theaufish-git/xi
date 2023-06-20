@@ -3,15 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ include "release.name" . }}
 data:
+  XI_SQL_PORT: {{ include "sql.port" .Values.sql.ports | toString | quote }}
   XI_SERVER_NAME: {{ .Values.xi.server.name | toString | quote }}
   XI_SERVER_MESSAGE: {{ .Values.xi.server.message | toString | quote }}
-  {{ if .Values.sql.local -}}
-  XI_SQL_HOST: {{ include "release.name.sql" . | toString | quote }}
-  XI_SQL_PORT: {{ include "sql.port" .Values.sql.ports | toString | quote }}
-  {{- else -}}
-  XI_SQL_HOST: {{ .Values.sql.host | toString | quote }}
-  XI_SQL_PORT: {{ .Values.sql.port | toString | quote }}
-  {{- end }}
   {{ range $key, $value := .Values.envvars -}}
   {{ $key }}: {{ toString $value | quote }}
   {{ end }}

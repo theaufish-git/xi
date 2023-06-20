@@ -1,4 +1,5 @@
-mysql -u root --password="${MARIADB_ROOT_PASSWORD}" -e "
+mysql \
+    --user=root --password="${MYSQL_ROOT_PASSWORD}" -e "
     CREATE USER IF NOT EXISTS '${XI_SQL_USERNAME}'@'%' IDENTIFIED BY '${XI_SQL_PASSWORD}';
     CREATE DATABASE IF NOT EXISTS ${XI_SQL_DATABASE};
     USE ${XI_SQL_DATABASE};

@@ -7,17 +7,13 @@ xi:
     name: fishmi
     message: Welcome to fishmi
 
-  loadBalancer:
-    ip: 35.208.32.177
+  loadBalancerIP: 34.170.94.249
 
   services:
     map:
       ports:
       - port: 54230
         protocol: UDP
-      - port: 54231
-        protocol: UDP
-        clause: zoneid % 2 = 1
     configure:
       secrets:
       - from: fishmi-sql
@@ -28,9 +24,11 @@ xi:
           database: database
 
 sql:
-  host: ffxi-390120:us-central1:fishmi
-  port: 3306
   secrets:
+  - from: fishmi-sql
+    prefix: mysql
+    values:
+      root_password: rootpassword
   - from: fishmi-sql
     prefix: xi_sql
     values:

@@ -1,5 +1,9 @@
 ## container.env.default
 {{- define "container.env.default" -}}
+- name: XI_SQL_HOST
+  valueFrom:
+    fieldRef:
+      fieldPath: status.podIP
 - name: POD_IP
   valueFrom:
     fieldRef:
@@ -37,12 +41,4 @@
 {{- range $_, $port := . }}
 - containerPort: {{ coalesce $port.targetPort $port.port }}
 {{- end }}
-{{- end -}}
-
-## container.security $container
-{{- define "container.security" -}}
-{{- if .securityContext -}}
-securityContext:
-  {{- toYaml .securityContext | nindent 2 -}}
-{{- end -}}
 {{- end -}}

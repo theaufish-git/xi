@@ -5,7 +5,7 @@ PLAYER ?= undefined
 REPOSITORY ?= undefined
 REVISION ?= undefined
 
-SQL_POD ?= $(shell kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep xi-$(DEPLOYMENT)-sql)
+POD ?= $(shell kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep xi-$(DEPLOYMENT))
 
 SET_REPOSITORY ?=
 ifneq ($(REPOSITORY), undefined)
@@ -36,14 +36,14 @@ uninstall:
 	$(HELM) uninstall $(DEPLOYMENT)
 
 db-backup:
-	kubectl exec -ti -c sql $(SQL_POD) -- python3 /opt/xi/tools/dbtool.py backup
-	kubectl cp -c sql $(SQL_POD):/opt/xi/sql/backups ./backups
+	kubectl exec -ti -c sql $(POD) -- python3 /opt/xi/tools/dbtool.py backup
+	kubectl cp -c sql $(POD):/opt/xi/sql/backups ./backups
 
 db-restore:
-	kubectl cp -c sql $(BACKUP) $(SQL_POD):/opt/xi/sql/backups
+	kubectl cp -c sql $(BACKUP) $(POD):/opt/xi/sql/backups
 
 db-admin:
-	kubectl exec -ti -c sql $(SQL_POD) -- python3 /opt/xi/tools/dbtool.py
+	kubectl exec -ti -c sql $(POD) -- python3 /opt/xi/tools/dbtool.py
 
 db-map-partitions:
-	kubectl exec -ti -c sql $(SQL_POD) -- python3 /opt/xi/tools/map-partitions.py
+	kubectl exec -ti -c sql $(POD) -- python3 /opt/xi/tools/map-partitions.py

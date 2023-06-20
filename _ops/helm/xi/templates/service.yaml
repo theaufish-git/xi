@@ -13,19 +13,3 @@ spec:
   {{- include "service.ports" .Values.xi.services.connect.ports | nindent 2 }}
   {{- include "service.ports" .Values.xi.services.map.ports | nindent 2 }}
   {{- include "service.ports" .Values.xi.services.search.ports | nindent 2 }}
-{{- if .Values.sql.enabled }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "release.name.sql" . }}
-  labels:
-    app: {{ include "release.name.sql" . }}
-spec:
-  type: ClusterIP
-  {{ include "service.loadBalancerIP" .Values.sql }}
-  selector:
-    app: {{ include "release.name.sql" . }}
-  ports:
-  {{ include "service.ports" .Values.sql.ports | nindent 2 }}
-{{- end -}}
