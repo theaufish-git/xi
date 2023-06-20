@@ -5,7 +5,6 @@
 --                       'Vegetable Vegetable Crisis'
 -- !pos 89 0 -75 256
 -----------------------------------
-require("scripts/globals/keyitems")
 require("scripts/globals/missions")
 require("scripts/globals/npc_util")
 require("scripts/globals/quests")
@@ -65,7 +64,7 @@ entity.onEventFinish = function(player, csid, option)
     elseif csid == 5089 then
         player:confirmTrade()
         player:setCharVar("VVC_Status", 2)
-        player:setCharVar("VVC_Gameday_Wait", vanaDay())
+        player:setCharVar("VVC_Gameday_Wait", VanadielUniqueDay())
     end
 end
 

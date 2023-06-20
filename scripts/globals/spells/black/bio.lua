@@ -2,8 +2,6 @@
 -- Spell: Bio
 -- Deals dark damage that weakens an enemy's attacks and gradually reduces its HP.
 -----------------------------------
-require("scripts/globals/settings")
-require("scripts/globals/status")
 require("scripts/globals/magic")
 require("scripts/globals/utils")
 require("scripts/globals/msg")
@@ -24,7 +22,7 @@ spellObject.onSpellCast = function(caster, target, spell)
     params.attribute = xi.mod.INT
     params.hasMultipleTargetReduction = false
     params.diff = caster:getStat(xi.mod.INT)-target:getStat(xi.mod.INT)
-    params.bonus = 1.0
+    params.bonus = 10
 
     -- Calculate raw damage
     local dmg = calculateMagicDamage(caster, target, spell, params)
