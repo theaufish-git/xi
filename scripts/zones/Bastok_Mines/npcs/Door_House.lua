@@ -5,7 +5,6 @@
 -----------------------------------
 local ID = require("scripts/zones/Bastok_Mines/IDs")
 require("scripts/globals/items")
-require("scripts/globals/keyitems")
 require("scripts/globals/npc_util")
 -----------------------------------
 local entity = {}
@@ -43,7 +42,7 @@ entity.onTrigger = function(player, npc)
             player:startEvent(535) -- i'm waiting for 4 imperial mythril pieces
 
         elseif letterBlue == 4 then
-            if vanaDay() > player:getCharVar("corAfSubmitDay") then
+            if VanadielUniqueDay() > player:getCharVar("corAfSubmitDay") then
                 player:startEvent(522) -- here's your cor bottes
             else
                 player:startEvent(523) -- patience. need to wait for vana'diel day
@@ -67,7 +66,7 @@ entity.onEventFinish = function(player, csid, option)
     elseif csid == 524 then
         player:confirmTrade()
         player:setCharVar("LeleroonsletterBlue", 4)
-        player:setCharVar("corAfSubmitDay", vanaDay())
+        player:setCharVar("corAfSubmitDay", VanadielUniqueDay())
 
     elseif
         csid == 522 and

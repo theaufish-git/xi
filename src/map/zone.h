@@ -342,7 +342,8 @@ enum ZONEID : uint16
     ZONE_DYNAMIS_WINDURST_D             = 296,
     ZONE_DYNAMIS_JEUNO_D                = 297,
     ZONE_WALK_OF_ECHOES_P1              = 298,
-    MAX_ZONEID                          = 299,
+    ZONE_GWORA_THRONE_ROOM              = 299,
+    MAX_ZONEID                          = 300,
 };
 
 enum class REGION_TYPE : uint8
@@ -411,7 +412,7 @@ enum class ZONE_TYPE : uint8
     CITY              = 1,
     OUTDOORS          = 2,
     DUNGEON           = 3,
-    BATTLEFIELD       = 4,
+    UNUSED            = 4, // formerly BATTLEFIELD
     DYNAMIS           = 5,
     DUNGEON_INSTANCED = 6,
 };

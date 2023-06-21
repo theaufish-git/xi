@@ -12,7 +12,6 @@
 -- Mandragora Warden : !pos 81.981 7.593 139.556 153
 require('scripts/globals/interaction/mission')
 require('scripts/globals/items')
-require('scripts/globals/keyitems')
 require('scripts/globals/missions')
 require('scripts/globals/npc_util')
 require('scripts/globals/zone')
@@ -155,8 +154,6 @@ mission.sections =
                     if missionStatus == 4 or missionStatus == 5 then
                         player:messageText(npc, boyahdaTreeID.text.WARDEN_SPEECH)
                         return mission:messageSpecial(boyahdaTreeID.text.WARDEN_TRANSLATION)
-                    else
-                        return mission:progressEvent(10)
                     end
                 end,
             },

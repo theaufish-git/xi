@@ -58,136 +58,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 #include "../packets/message_standard.h"
 #include "../packets/pet_sync.h"
 
-struct Pet_t
-{
-    uint16      PetID;     // ID in pet_list.sql
-    look_t      look;      // внешний вид
-    std::string name;      // имя
-    ECOSYSTEM   EcoSystem; // эко-система
-
-    uint8 minLevel; // минимально-возможный  уровень
-    uint8 maxLevel; // максимально-возможный уровень
-
-    uint8  name_prefix;
-    uint8  radius; // Model Radius - affects melee range etc.
-    uint16 m_Family;
-    uint32 time; // время существования (будет использоваться для задания длительности статус эффекта)
-
-    uint8 mJob;
-    uint8 sJob;
-    uint8 m_Element;
-    float HPscale; // HP boost percentage
-    float MPscale; // MP boost percentage
-
-    uint16 cmbDelay;
-    uint8  speed;
-    // stat ranks
-    uint8 strRank;
-    uint8 dexRank;
-    uint8 vitRank;
-    uint8 agiRank;
-    uint8 intRank;
-    uint8 mndRank;
-    uint8 chrRank;
-    uint8 attRank;
-    uint8 defRank;
-    uint8 evaRank;
-    uint8 accRank;
-
-    uint16 m_MobSkillList;
-
-    // magic stuff
-    bool   hasSpellScript;
-    uint16 spellList;
-
-    // resists
-    int16 slash_sdt;
-    int16 pierce_sdt;
-    int16 hth_sdt;
-    int16 impact_sdt;
-
-    int16 fire_sdt;
-    int16 ice_sdt;
-    int16 wind_sdt;
-    int16 earth_sdt;
-    int16 thunder_sdt;
-    int16 water_sdt;
-    int16 light_sdt;
-    int16 dark_sdt;
-
-    int8 fire_res_rank;
-    int8 ice_res_rank;
-    int8 wind_res_rank;
-    int8 earth_res_rank;
-    int8 thunder_res_rank;
-    int8 water_res_rank;
-    int8 light_res_rank;
-    int8 dark_res_rank;
-
-    Pet_t()
-    : EcoSystem(ECOSYSTEM::ECO_ERROR)
-    {
-        PetID = 0;
-
-        minLevel = -1;
-        maxLevel = 99;
-
-        name_prefix = 0;
-        radius      = 0;
-        m_Family    = 0;
-        time        = 0;
-
-        mJob      = 0;
-        sJob      = 0;
-        m_Element = 0;
-        HPscale   = 0.f;
-        MPscale   = 0.f;
-
-        cmbDelay = 0;
-        speed    = 0;
-
-        strRank = 0;
-        dexRank = 0;
-        vitRank = 0;
-        agiRank = 0;
-        intRank = 0;
-        mndRank = 0;
-        chrRank = 0;
-        attRank = 0;
-        defRank = 0;
-        evaRank = 0;
-        accRank = 0;
-
-        m_MobSkillList = 0;
-
-        hasSpellScript = false;
-        spellList      = 0;
-
-        slash_sdt  = 0;
-        pierce_sdt = 0;
-        hth_sdt    = 0;
-        impact_sdt = 0;
-
-        fire_sdt    = 0;
-        ice_sdt     = 0;
-        wind_sdt    = 0;
-        earth_sdt   = 0;
-        thunder_sdt = 0;
-        water_sdt   = 0;
-        light_sdt   = 0;
-        dark_sdt    = 0;
-
-        fire_res_rank    = 0;
-        ice_res_rank     = 0;
-        wind_res_rank    = 0;
-        earth_res_rank   = 0;
-        thunder_res_rank = 0;
-        water_res_rank   = 0;
-        light_res_rank   = 0;
-        dark_res_rank    = 0;
-    }
-};
-
 std::vector<Pet_t*> g_PPetList;
 
 namespace petutils
@@ -1230,7 +1100,11 @@ namespace petutils
 
     void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
     {
-        XI_DEBUG_BREAK_IF(PMaster->PPet != nullptr);
+        if (PMaster->PPet != nullptr)
+        {
+            ShowWarning("Pet was not null for %s.", PMaster->GetName());
+            return;
+        }
 
         if (PMaster->objtype == TYPE_PC &&
             (PetID == PETID_HARLEQUINFRAME || PetID == PETID_VALOREDGEFRAME || PetID == PETID_SHARPSHOTFRAME || PetID == PETID_STORMWAKERFRAME))
@@ -1349,9 +1223,23 @@ namespace petutils
 
     void DetachPet(CBattleEntity* PMaster)
     {
-        XI_DEBUG_BREAK_IF(PMaster == nullptr);
-        XI_DEBUG_BREAK_IF(PMaster->PPet == nullptr);
-        XI_DEBUG_BREAK_IF(PMaster->objtype != TYPE_PC);
+        if (PMaster == nullptr)
+        {
+            ShowWarning("PMaster is null.");
+            return;
+        }
+
+        if (PMaster->PPet == nullptr)
+        {
+            ShowWarning("Pet is null for %s.", PMaster->GetName());
+            return;
+        }
+
+        if (PMaster->objtype != TYPE_PC)
+        {
+            ShowWarning("Non-PC passed into function (%s)", PMaster->GetName());
+            return;
+        }
 
         CBattleEntity* PPet  = PMaster->PPet;
         CCharEntity*   PChar = static_cast<CCharEntity*>(PMaster);
@@ -1449,8 +1337,17 @@ namespace petutils
 
     void DespawnPet(CBattleEntity* PMaster)
     {
-        XI_DEBUG_BREAK_IF(PMaster == nullptr);
-        XI_DEBUG_BREAK_IF(PMaster->PPet == nullptr);
+        if (PMaster == nullptr)
+        {
+            ShowWarning("PMaster is null.");
+            return;
+        }
+
+        if (PMaster->PPet == nullptr)
+        {
+            ShowWarning("Pet is null for %s.", PMaster->GetName());
+            return;
+        }
 
         petutils::DetachPet(PMaster);
     }
@@ -1690,8 +1587,17 @@ namespace petutils
 
     void LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
     {
-        XI_DEBUG_BREAK_IF(PMaster == nullptr);
-        XI_DEBUG_BREAK_IF(PetID >= MAX_PETID);
+        if (PMaster == nullptr)
+        {
+            ShowWarning("PMaster is null.");
+            return;
+        }
+
+        if (PetID >= MAX_PETID)
+        {
+            ShowWarning("PetID (%d) exceeds MAX_PETID", PetID);
+            return;
+        }
 
         // clang-format off
         Pet_t* PPetData = *std::find_if(g_PPetList.begin(), g_PPetList.end(), [PetID](Pet_t* t)
@@ -1790,6 +1696,19 @@ namespace petutils
         else if (PetID == PETID_LUOPAN)
         {
             petType = PET_TYPE::LUOPAN;
+        }
+
+        if (settings::get<bool>("map.DESPAWN_JUGPETS_BELOW_MINIMUM_LEVEL"))
+        {
+            // Don't spawn jugpet if min level is above master's level
+            if (petType == PET_TYPE::JUG_PET && PMaster->loc.zone)
+            {
+                uint8 levelRestriction = PMaster->loc.zone->getLevelRestriction();
+                if (levelRestriction != 0 && (PMaster->loc.zone->getLevelRestriction() < PPetData->minLevel))
+                {
+                    return;
+                }
+            }
         }
 
         CPetEntity* PPet = nullptr;
@@ -1902,4 +1821,16 @@ namespace petutils
         }
         return false;
     }
+
+    Pet_t* GetPetInfo(uint32 PetID)
+    {
+        for (Pet_t* info : g_PPetList)
+        {
+            if (info->PetID == PetID)
+                return info;
+        }
+
+        return nullptr;
+    }
+
 }; // namespace petutils

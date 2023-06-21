@@ -225,6 +225,9 @@ xi.settings.map =
     -- Prevent players from sending tells to hidden GMs. You will still receive them from other GMs.
     BLOCK_TELL_TO_HIDDEN_GM = false,
 
+    -- Prevent players from performing WS while unengaged using packet injection.
+    PREVENT_UNENGAGED_WS = false,
+
     -- Command Audit [logging] commands with lower permission than this will not be logged.
     -- Zero for no logging at all. Commands given to non GMs are not logged.
     AUDIT_GM_CMD = false,
@@ -252,6 +255,11 @@ xi.settings.map =
 
     -- Enable/disable keeping jug pets through zoning
     KEEP_JUGPET_THROUGH_ZONING = false,
+
+    -- Despawn jug pets that have a minimum level below level sync or zone level restriction.
+    -- Such as despawning Courier Carrie in a level 20 cap when their minimum level to summon is 23.
+    -- While the default value of false is retail accurate, there are some balance concerns such as using 1000 needles at low levels from the cactuar pet.
+    DESPAWN_JUGPETS_BELOW_MINIMUM_LEVEL = false,
 
     -- Send stack traces to the client after caught Lua errors if
     -- their GM level is the same or higher than this number.

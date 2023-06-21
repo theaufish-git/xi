@@ -507,7 +507,7 @@ void CMobEntity::PostTick()
 
 float CMobEntity::GetRoamDistance()
 {
-    return (float)getMobMod(MOBMOD_ROAM_DISTANCE) / 10.0f;
+    return (float)getMobMod(MOBMOD_ROAM_DISTANCE);
 }
 
 float CMobEntity::GetRoamRate()
@@ -996,7 +996,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
     }
 
     ZONE_TYPE zoneType  = zoneutils::GetZone(PChar->getZone())->GetType();
-    bool      validZone = zoneType != ZONE_TYPE::BATTLEFIELD && zoneType != ZONE_TYPE::DYNAMIS;
+    bool      validZone = !(this->m_Type & MOBTYPE_BATTLEFIELD) && zoneType != ZONE_TYPE::DYNAMIS;
 
     // Check if mob can drop seals -- mobmod to disable drops, zone type isnt battlefield/dynamis, mob is stronger than Too Weak, or mobmod for EXP bonus is -100 or lower (-100% exp)
     if (!getMobMod(MOBMOD_NO_DROPS) && validZone && charutils::CheckMob(m_HiPCLvl, GetMLevel()) > EMobDifficulty::TooWeak && getMobMod(MOBMOD_EXP_BONUS) > -100)
@@ -1467,4 +1467,9 @@ bool CMobEntity::OnAttack(CAttackState& state, action_t& action)
     {
         return CBattleEntity::OnAttack(state, action);
     }
+}
+
+bool CMobEntity::isWideScannable()
+{
+    return CBaseEntity::isWideScannable() && !getMobMod(MOBMOD_NO_WIDESCAN);
 }

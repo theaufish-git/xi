@@ -2,10 +2,8 @@
 -- Records of Eminence
 -----------------------------------
 require("scripts/globals/items")
-require("scripts/globals/keyitems")
 require("scripts/globals/missions")
 require("scripts/globals/quests")
-require("scripts/globals/status")
 require("scripts/globals/zone")
 -----------------------------------
 
@@ -368,7 +366,7 @@ function getRoeRecords(triggers)
         [510] =
         { -- Obtain Job: Paladin
             trigger = triggers.questComplete,
-            reqs = { questComplete = { xi.quest.log_id.SANDORIA, xi.quest.id.sandoria.A_SQUIRE_S_TEST } },
+            reqs = { questComplete = { xi.quest.log_id.SANDORIA, xi.quest.id.sandoria.A_KNIGHTS_TEST } },
             flags = set { "retro" },
             reward = { sparks = 100, xp = 300 },
         },
