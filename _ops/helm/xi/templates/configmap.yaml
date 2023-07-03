@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "release.name" . }}
+data:
+  XI_SQL_PORT: {{ include "sql.port" .Values.sql.ports | toString | quote }}
+  XI_SERVER_NAME: {{ .Values.xi.server.name | toString | quote }}
+  XI_SERVER_MESSAGE: {{ .Values.xi.server.message | toString | quote }}
+  {{ range $key, $value := .Values.envvars -}}
+  {{ $key }}: {{ toString $value | quote }}
+  {{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "release.name" . }}-sql
+data:
+  XI_NETWORK_SQL_HOST: {{ default "localhost" .Values.sql.host | toString | quote }}
+  {{ range $key, $value := .Values.sql.envvars -}}
+  {{ $key }}: {{ toString $value | quote }}
+  {{ end -}}
+  {{ range $i, $port := (rest .Values.xi.services.map.ports) -}}
+  {{ printf "xi_map_instance_%v_port" (add1 $i) | upper }}: {{ coalesce $port.port $port.targetPort | toString | quote }}
+  {{ printf "xi_map_instance_%v_clause" (add1 $i) | upper }}: {{ $port.clause | toString | quote }}
+  {{ end -}}

@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  xi:
+    image: ${REPOSITORY}:${REVISION}
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile
+
+  xi-config:
+    image: ${REPOSITORY}:${REVISION}-config
+    build:
+      context: ..
+      dockerfile: _ops/config/Dockerfile
+
+  xi-meshes:
+    image: ${REPOSITORY}:${REVISION}-meshes
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile-meshes
+
+  xi-scripts:
+    image: ${REPOSITORY}:${REVISION}-scripts
+    build:
+      context: ..
+      dockerfile: _ops/xi/Dockerfile-scripts
+
+  xi-sql:
+    image: ${REPOSITORY}:${REVISION}-sql
+    build:
+      context: ..
+      dockerfile: _ops/sql/Dockerfile

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "release.name" . }}
+  labels:
+    app: {{ include "release.name" . }}
+spec:
+  type: LoadBalancer
+  {{ include "service.loadBalancerIP" .Values.xi }}
+  selector:
+    app: {{ include "release.name" . }}
+  ports:
+  {{- include "service.ports" .Values.xi.services.connect.ports | nindent 2 }}
+  {{- include "service.ports" .Values.xi.services.map.ports | nindent 2 }}
+  {{- include "service.ports" .Values.xi.services.search.ports | nindent 2 }}
